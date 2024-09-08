@@ -3,10 +3,13 @@ from html.entities import html5
 import telebot
 import webbrowser
 import time
-
-
+from YandexImagesParser.ImageParser import YandexImage
 #if __name__ == '__main__':
+###OBJECTS:
+parser = YandexImage()
 bot=telebot.TeleBot('6868027735:AAFgb6as_VHtvUxDZ6ij6b_F9Ggo2Sa56ro')
+###END OF OBJECTS
+
 @bot.message_handler(commands=['start'])
 def startFunc(message):
     bot.send_message(message.chat.id, f"привет, {str(message.from_user.first_name)}"+str(message.from_user.last_name))
