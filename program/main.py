@@ -3,11 +3,15 @@ from html.entities import html5
 import telebot
 import webbrowser
 import time
-from YandexImagesParser.ImageParser import YandexImage
+from Image_parser import YandexImage
+from Params import params
+from telebot import types
 #if __name__ == '__main__':
 ###OBJECTS:
 parser = YandexImage()
-bot=telebot.TeleBot('6868027735:AAFgb6as_VHtvUxDZ6ij6b_F9Ggo2Sa56ro')
+bot=telebot.TeleBot(params.tg_key)
+delay=1.5
+n_pictures = 10
 ###END OF OBJECTS
 
 @bot.message_handler(commands=['start'])
@@ -29,18 +33,36 @@ def site(message):
     webbrowser.open("https://vk.com/loomman1")
 
 #СМОТРЕТЬ МАЛЬЧИКОВ
-@bot.message_handler(commands=['getnudeboys'])
-def site(message):
+@bot.message_handler(commands=['set_n_pictures'])
+def set_n_pics(message):
+    markup = types.InlineKeyboardMarkup()
+    # markup.add(types.InlineKeyboardButton("dfg"), callback='func')
+    bot.send_message(message.chat.id, "", reply_markup=markup)
+
+#СМОТРЕТЬ МАЛЬЧИКОВ
+@bot.message_handler(commands=['set_interval'])
+def set_interval(message):
     webbrowser.open("https://vk.com/loomman1")
 
 #СМОТРЕТЬ ДЕВОЧЕК
-@bot.message_handler(commands=['getnudegirls'])
+@bot.message_handler(content_types=["text"])
 def site(message):
-    for i in range(3):
-        bot.send_message(message.chat.id, 'Тут должны быть девочки')
-        #time.sleep(3)
-        #bot.send_message(message.chat.id, '<img src="https://ya.ru/images/search?from=tabbar&img_url=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Fe8%2F8f%2F30%2Fe88f3028afe762960b7a2c11837b34d1.jpg&lr=21774&pos=1&rpt=simage&text=котик">', parse_mode='html')
-        bot.send_photo(message.chat.id,"https://i.pinimg.com/736x/81/14/a1/8114a111992db0767789693670fe9756.jpg")
+    if (message.text.lower == "привет"):
+        bot.send_message(message.chat.id,
+                         f"привет, {str(message.from_user.first_name)}" + str(message.from_user.last_name))
+    elif (message.text.lower == "п"):
+        bot.send_message(message.chat.id, "Тут однажды будет погода")
+    else:
+        bot.send_photo(message.chat.id,"https://steamuserimages-a.akamaihd.net/ugc/2027236669268481682/9110BF376AD38B81736946AC6619700ABACFCFA1/?imw=512&amp;imh=512&amp;ima=fit&amp;impolicy=Letterbox&amp;imcolor=%23000000&amp;letterbox=true")
+        links=parser.search(message)
+        print(len(links))
+        n=0
+        for item in links:
+            if (n < n_pictures):
+                bot.send_photo(message.chat.id, item)
+                time.sleep(delay)
+                n+=1
+        bot.send_message(message.chat.id, 'Вот так вот!')
 
 @bot.message_handler()
 def defaultFunc(message):
